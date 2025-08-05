@@ -8,11 +8,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.inventorymanager.model.LogEntity;
+
 import java.util.ArrayList;
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
-    private final ArrayList<LogEntry> logs;
+    private final ArrayList<LogEntity> logs;
 
-    public LogAdapter(ArrayList<LogEntry> logs){
+    public LogAdapter(ArrayList<LogEntity> logs){
         this.logs = logs;
     }
 
@@ -26,7 +28,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull LogViewHolder holder, int position){
-        LogEntry log = logs.get(position);
+        LogEntity log = logs.get(position);
 
         String componentText = "Component: " + log.getComponentName();
         String takenByText = "Taken By: " + log.getTakenBy();

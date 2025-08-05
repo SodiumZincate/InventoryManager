@@ -1,7 +1,9 @@
 package com.example.inventorymanager;
 
+import com.example.inventorymanager.model.LogDatabase;
+import com.example.inventorymanager.model.LogEntity;
+
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -10,14 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
     private EditText etComponentName, etTakenBy, etBurrowedDate, etReturnDate;
     private Button btnAddLog;
+
     private RecyclerView recyclerViewLogs;
     private LogAdapter logAdapter;
-    private ArrayList<LogEntry> logList;
+    private ArrayList<LogEntity> logList;
+    private LogDatabase logDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -31,6 +38,7 @@ public class MainActivity extends AppCompatActivity{
         btnAddLog = findViewById(R.id.btnAddLog);
         recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
 
+        logDatabase = LogDatabase.getInstance(this);
         logList = new ArrayList<>();
         logAdapter = new LogAdapter(logList);
         recyclerViewLogs.setLayoutManager(new LinearLayoutManager(this));
@@ -44,15 +52,38 @@ public class MainActivity extends AppCompatActivity{
 
             if(!componentName.isEmpty() && !takenBy.isEmpty() &&
                     !burrowedDate.isEmpty() && !returnDate.isEmpty()){
-                LogEntry logEntry = new LogEntry(componentName, takenBy, burrowedDate, returnDate);
-                logList.add(logEntry);
-                logAdapter.notifyItemInserted(logList.size() - 1);
+                final LogEntity log = new LogEntity(componentName, takenBy, burrowedDate, returnDate);
 
-                etComponentName.setText("");
-                etTakenBy.setText("");
-                etBurrowedDate.setText("");
-                etReturnDate.setText("");
+                try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+                    executor.execute(() -> {
+                        logDatabase.logDao().insert(log);
+                        runOnUiThread(() -> {
+                            loadLogsFromDatabase();
+                            clearForm();
+                        });
+                    });
+                }
             }
         });
+    }
+
+    private void clearForm() {
+        etComponentName.setText("");
+        etTakenBy.setText("");
+        etReturnDate.setText("");
+        etReturnDate.setText("");
+    }
+
+    private void loadLogsFromDatabase() {
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+            executor.execute(() -> {
+                final List<LogEntity> logs = logDatabase.logDao().getAllLogs();
+                runOnUiThread(() -> {
+                    logList.clear();
+                    logList.addAll(logs);
+                    logAdapter.notifyItemInserted(logList.size() - 1);
+                });
+            });
+        }
     }
 }
