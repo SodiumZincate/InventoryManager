@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +15,15 @@ import java.util.ArrayList;
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
     private final ArrayList<LogEntity> logs;
 
-    public LogAdapter(ArrayList<LogEntity> logs){
+    private final OnDeleteClickListener deleteClickListener;
+
+    public interface OnDeleteClickListener{
+        void onDeleteClick(LogEntity log);
+    }
+
+    public LogAdapter(ArrayList<LogEntity> logs, OnDeleteClickListener listener){
         this.logs = logs;
+        this.deleteClickListener = listener;
     }
 
     @NonNull
@@ -38,6 +46,12 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
         holder.tvTakenBy.setText(takenByText);
         holder.tvBurrowedDate.setText(burrowedDateText);
         holder.tvReturnDate.setText(returnDateText);
+
+        holder.btnDeleteLog.setOnClickListener(v -> {
+            if(deleteClickListener != null){
+                deleteClickListener.onDeleteClick(log);
+            }
+        });
     }
 
     @Override
@@ -47,6 +61,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
 
     public static class LogViewHolder extends RecyclerView.ViewHolder{
         TextView tvComponentName, tvTakenBy, tvBurrowedDate, tvReturnDate;
+        ImageButton btnDeleteLog;
 
         public LogViewHolder(@NonNull View itemView){
             super(itemView);
@@ -54,6 +69,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
             tvTakenBy = itemView.findViewById(R.id.tvTakenBy);
             tvBurrowedDate = itemView.findViewById(R.id.tvBurrowedDate);
             tvReturnDate = itemView.findViewById(R.id.tvReturnDate);
+            btnDeleteLog = itemView.findViewById(R.id.btnDeleteLog);
         }
     }
 }

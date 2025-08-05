@@ -3,6 +3,7 @@ package com.example.inventorymanager;
 import com.example.inventorymanager.model.LogDatabase;
 import com.example.inventorymanager.model.LogEntity;
 
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.List;
@@ -40,9 +43,21 @@ public class MainActivity extends AppCompatActivity{
 
         logDatabase = LogDatabase.getInstance(this);
         logList = new ArrayList<>();
-        logAdapter = new LogAdapter(logList);
+
+        LogAdapter.OnDeleteClickListener deleteClickListener = log -> {
+            try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+                executor.execute(() -> {
+                    logDatabase.logDao().delete(log);
+                    runOnUiThread(this::loadLogsFromDatabase);
+                });
+            }
+        };
+        logAdapter = new LogAdapter(logList, deleteClickListener);
+
         recyclerViewLogs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewLogs.setAdapter(logAdapter);
+
+        loadLogsFromDatabase();
 
         btnAddLog.setOnClickListener(v -> {
             String componentName = etComponentName.getText().toString().trim();
@@ -50,19 +65,52 @@ public class MainActivity extends AppCompatActivity{
             String burrowedDate = etBurrowedDate.getText().toString().trim();
             String returnDate = etReturnDate.getText().toString().trim();
 
-            if(!componentName.isEmpty() && !takenBy.isEmpty() &&
-                    !burrowedDate.isEmpty() && !returnDate.isEmpty()){
-                final LogEntity log = new LogEntity(componentName, takenBy, burrowedDate, returnDate);
+            if(componentName.isEmpty()){
+                etComponentName.setError("Component Name is Required");
+                etComponentName.requestFocus();
+                return;
+            }
+            if(takenBy.isEmpty()){
+                etTakenBy.setError("Name is Required");
+                etTakenBy.requestFocus();
+                return;
+            }
+            if(burrowedDate.isEmpty()){
+                etBurrowedDate.setError("Burrowed Date is Required");
+                etBurrowedDate.requestFocus();
+                return;
+            }
+            if(!isValidDate(burrowedDate)){
+                etBurrowedDate.setError("Enter Valid Date YYYY/MM/DD");
+                etBurrowedDate.requestFocus();
+                return;
+            }
+            if(returnDate.isEmpty()){
+                etReturnDate.setError("Return Date is Required");
+                etReturnDate.requestFocus();
+                return;
+            }
+            if(!isValidDate(returnDate)){
+                etReturnDate.setError("Enter Valid Date YYYY/MM/DD");
+                etReturnDate.requestFocus();
+                return;
+            }
+            if (returnDate.compareTo(burrowedDate) < 0) {
+                etReturnDate.setError("Return date must be after burrowed date");
+                etReturnDate.requestFocus();
+                return;
+            }
 
-                try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
-                    executor.execute(() -> {
-                        logDatabase.logDao().insert(log);
-                        runOnUiThread(() -> {
-                            loadLogsFromDatabase();
-                            clearForm();
-                        });
+            final LogEntity log = new LogEntity(componentName, takenBy, burrowedDate, returnDate);
+
+            try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+                executor.execute(() -> {
+                    logDatabase.logDao().insert(log);
+                    runOnUiThread(() -> {
+                        clearForm();
+                        loadLogsFromDatabase();
                     });
-                }
+                });
             }
         });
     }
@@ -70,8 +118,19 @@ public class MainActivity extends AppCompatActivity{
     private void clearForm() {
         etComponentName.setText("");
         etTakenBy.setText("");
+        etBurrowedDate.setText("");
         etReturnDate.setText("");
-        etReturnDate.setText("");
+    }
+
+    private boolean isValidDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd", Locale.US);
+        sdf.setLenient(false);
+        try {
+            sdf.parse(dateStr);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     private void loadLogsFromDatabase() {
@@ -81,7 +140,7 @@ public class MainActivity extends AppCompatActivity{
                 runOnUiThread(() -> {
                     logList.clear();
                     logList.addAll(logs);
-                    logAdapter.notifyItemInserted(logList.size() - 1);
+                    logAdapter.notifyDataSetChanged();
                 });
             });
         }
