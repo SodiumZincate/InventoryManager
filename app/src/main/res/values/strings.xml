@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">InventoryManager</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="component_name">Component Name</string>
+    <string name="taken_by">Taken By</string>
+    <string name="burrowed_date">Burrowed Date</string>
+    <string name="return_date">Return Date</string>
+    <string name="add_log">Add Log</string>
 </resources>
