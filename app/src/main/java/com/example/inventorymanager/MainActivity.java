@@ -36,25 +36,22 @@ public class MainActivity extends AppCompatActivity{
         recyclerViewLogs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewLogs.setAdapter(logAdapter);
 
-        btnAddLog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String componentName = etComponentName.getText().toString().trim();
-                String takenBy = etTakenBy.getText().toString().trim();
-                String burrowedDate = etBurrowedDate.getText().toString().trim();
-                String returnDate = etReturnDate.getText().toString().trim();
+        btnAddLog.setOnClickListener(v -> {
+            String componentName = etComponentName.getText().toString().trim();
+            String takenBy = etTakenBy.getText().toString().trim();
+            String burrowedDate = etBurrowedDate.getText().toString().trim();
+            String returnDate = etReturnDate.getText().toString().trim();
 
-                if(!componentName.isEmpty() && !takenBy.isEmpty() &&
-                        !burrowedDate.isEmpty() && !returnDate.isEmpty()){
-                    LogEntry logEntry = new LogEntry(componentName, takenBy, burrowedDate, returnDate);
-                    logList.add(logEntry);
-                    logAdapter.notifyItemInserted(logList.size() - 1);
+            if(!componentName.isEmpty() && !takenBy.isEmpty() &&
+                    !burrowedDate.isEmpty() && !returnDate.isEmpty()){
+                LogEntry logEntry = new LogEntry(componentName, takenBy, burrowedDate, returnDate);
+                logList.add(logEntry);
+                logAdapter.notifyItemInserted(logList.size() - 1);
 
-                    etComponentName.setText("");
-                    etTakenBy.setText("");
-                    etBurrowedDate.setText("");
-                    etReturnDate.setText("");
-                }
+                etComponentName.setText("");
+                etTakenBy.setText("");
+                etBurrowedDate.setText("");
+                etReturnDate.setText("");
             }
         });
     }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
-    private ArrayList<LogEntry> logs;
+    private final ArrayList<LogEntry> logs;
 
     public LogAdapter(ArrayList<LogEntry> logs){
         this.logs = logs;
