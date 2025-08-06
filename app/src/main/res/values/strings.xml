@@ -7,4 +7,9 @@
     <string name="return_date">Return Date: YYYY/MM/DD</string>
     <string name="add_log">Add Log</string>
     <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
+    <string name="form">Form</string>
+    <string name="finished">Finished</string>
+    <string name="unfinished">Unfinished</string>
+    <string name="all">All</string>
 </resources>

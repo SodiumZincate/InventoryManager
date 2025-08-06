@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -21,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="@string/component_name"
         android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvBurrowedDate"
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:text="@string/component_name"
         android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvReturnDate"
@@ -37,14 +38,38 @@
         android:layout_height="wrap_content"
         android:text="@string/component_name"
         android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
-    <ImageButton
-        android:id="@+id/btnDeleteLog"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_delete"
-        android:contentDescription="@string/delete"
-        android:background="?attr/selectableItemBackgroundBorderless"/>
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:background="#F5F5F5">
+
+        <ImageButton
+            android:id="@+id/btnDeleteLog"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="#9c4e4c"
+            android:contentDescription="@string/delete"
+            android:src="@android:drawable/ic_menu_delete"/>
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp" />
+
+        <ImageButton
+            android:id="@+id/btnFinishLog"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="#2c9c5d"
+            android:contentDescription="@string/confirm"
+            android:src="@android:drawable/checkbox_on_background"/>
+    </LinearLayout>
+
 
 </LinearLayout>
