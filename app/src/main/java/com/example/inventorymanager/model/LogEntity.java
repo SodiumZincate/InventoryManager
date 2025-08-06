@@ -12,12 +12,14 @@ public class LogEntity {
     private String takenBy;
     private String burrowedDate;
     private String returnDate;
+    private boolean isFinished;
 
     public LogEntity(String componentName, String takenBy, String burrowedDate, String returnDate){
         this.componentName = componentName;
         this.takenBy = takenBy;
         this.burrowedDate = burrowedDate;
         this.returnDate = returnDate;
+        this.isFinished = false;
     }
 
     public int getId() {
@@ -44,6 +46,10 @@ public class LogEntity {
         return returnDate;
     }
 
+    public void setFinished(boolean finished) {
+        isFinished = finished;
+    }
+
     public void setComponentName(String takenBy){
         this.componentName = componentName;
     }
@@ -58,5 +64,9 @@ public class LogEntity {
 
     public void setReturnDate(String returnDate) {
         this.returnDate = returnDate;
+    }
+
+    public boolean isFinished() {
+        return isFinished;
     }
 }

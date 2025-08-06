@@ -1,5 +1,7 @@
 package com.example.inventorymanager;
 
+import android.app.AlertDialog;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.inventorymanager.model.LogEntity;
 
 import java.util.ArrayList;
+
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
-    private final ArrayList<LogEntity> logs;
+    private ArrayList<LogEntity> logs;
+    private OnLogActionListener actionListener;
 
-    private final OnDeleteClickListener deleteClickListener;
-
-    public interface OnDeleteClickListener{
+    public interface OnLogActionListener {
+        void onFinishClick(LogEntity log);
         void onDeleteClick(LogEntity log);
     }
 
-    public LogAdapter(ArrayList<LogEntity> logs, OnDeleteClickListener listener){
+    public void setActionListener(OnLogActionListener actionListener) {
+        this.actionListener = actionListener;
+    }
+
+    public LogAdapter(ArrayList<LogEntity> logs){
         this.logs = logs;
-        this.deleteClickListener = listener;
     }
 
     @NonNull
@@ -47,9 +53,37 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
         holder.tvBurrowedDate.setText(burrowedDateText);
         holder.tvReturnDate.setText(returnDateText);
 
+        if(log.isFinished()){
+            holder.itemView.setBackgroundColor(Color.parseColor("#C8E6C9"));
+        }
+        else{
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
         holder.btnDeleteLog.setOnClickListener(v -> {
-            if(deleteClickListener != null){
-                deleteClickListener.onDeleteClick(log);
+            if(actionListener != null){
+                new AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle("Confirm Delete")
+                        .setMessage("Are you sure you want to delete this log?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            actionListener.onDeleteClick(log);
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+            }
+        });
+
+        holder.btnFinishLog.setOnClickListener(v -> {
+            if(actionListener != null){
+                new AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle("Confirm Finish")
+                        .setMessage("Are you sure you want to finish this log?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            log.setFinished(true);
+                            actionListener.onFinishClick(log);
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             }
         });
     }
@@ -59,9 +93,14 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
         return logs.size();
     }
 
+    public void setLogs(ArrayList<LogEntity> logs) {
+        this.logs = logs;
+        notifyDataSetChanged();
+    }
+
     public static class LogViewHolder extends RecyclerView.ViewHolder{
         TextView tvComponentName, tvTakenBy, tvBurrowedDate, tvReturnDate;
-        ImageButton btnDeleteLog;
+        ImageButton btnDeleteLog, btnFinishLog;
 
         public LogViewHolder(@NonNull View itemView){
             super(itemView);
@@ -70,6 +109,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.LogViewHolder>{
             tvBurrowedDate = itemView.findViewById(R.id.tvBurrowedDate);
             tvReturnDate = itemView.findViewById(R.id.tvReturnDate);
             btnDeleteLog = itemView.findViewById(R.id.btnDeleteLog);
+            btnFinishLog = itemView.findViewById(R.id.btnFinishLog);
         }
     }
 }
