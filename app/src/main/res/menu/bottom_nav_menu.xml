@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navForm" android:icon="@drawable/form" android:title="@string/form"/>
+    <item android:id="@+id/navFinished" android:icon="@drawable/finished" android:title="@string/finished"/>
+    <item android:id="@+id/navUnfinished" android:icon="@drawable/unfinished" android:title="@string/unfinished"/>
+    <item android:id="@+id/navAll" android:icon="@drawable/all" android:title="@string/all"/>
+</menu>
