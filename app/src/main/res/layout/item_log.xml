@@ -45,13 +45,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:gravity="center_vertical"
-        android:background="#F5F5F5">
+        android:gravity="center_vertical">
 
         <ImageButton
             android:id="@+id/btnDeleteLog"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="32dp"
             android:layout_weight="1"
             android:background="#9c4e4c"
             android:contentDescription="@string/delete"
@@ -64,7 +63,7 @@
         <ImageButton
             android:id="@+id/btnFinishLog"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="32dp"
             android:layout_weight="1"
             android:background="#2c9c5d"
             android:contentDescription="@string/confirm"
