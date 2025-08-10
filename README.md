@@ -1,64 +1,31 @@
-Inventory Logging App
-An Android app built in Java to manage component logs using Room database and RecyclerView. The app allows you to create, view, update, and delete logs for inventory items, with separate menus for finished, unfinished, and all items.
+# Inventory Logging App (Android)
 
-Features
-Add new logs with details such as:
+An Android app built with Java and Room database for logging inventory items.  
+Users can create, view, update, and delete logs for components, with a status to mark items as finished or unfinished.
 
-Component name
+---
 
-Time taken
+## Features
 
-Return date
+- **Log Form** – Add new inventory items with details.
+- **Finished Items** – View all completed logs.
+- **Unfinished Items** – View items still pending.
+- **All Items** – View the complete list of logs.
+- **Mark as Finished** – Easily mark logs as done.
+- **Delete Logs** – Remove logs when no longer needed.
+- **Persistent Storage** – All data stored locally using Room.
 
-Taken by
+---
 
-View logs filtered into:
+## Tech Stack
 
-Finished items
+- **Language:** Java
+- **Database:** Room (SQLite)
+- **UI Components:** RecyclerView, ScrollView
+- **Architecture:** MVVM (Model-View-ViewModel)
 
-Unfinished items
+---
 
-All items
+## GitHub
 
-Mark logs as finished
-
-Delete logs from the database
-
-Data persistence using Room database
-
-Smooth scrolling list with RecyclerView
-
-Tech Stack
-Language: Java
-
-Database: Room (SQLite)
-
-UI: XML layouts, RecyclerView
-
-Architecture: MVVM (Model-View-ViewModel)
-
-Installation
-Clone the repository:
-
-bash
-Copy
-Edit
-git clone <repository_url>
-Open the project in Android Studio.
-
-Let Gradle sync automatically.
-
-Run the app on an emulator or physical device.
-
-Usage
-Add a new log: Fill in the form and save.
-
-View logs: Switch between Finished, Unfinished, and All logs.
-
-Mark as finished: Tap the finish button in the log list.
-
-Delete a log: Tap the delete button in the log list.
-
-GitHub Repository
-The complete source code is available on GitHub:
-GitHub Repository Link
+- *https://github.com/SodiumZincate/InventoryManager*
