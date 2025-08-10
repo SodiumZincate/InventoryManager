@@ -1,4 +1,4 @@
-# Inventory Logging App (Android)
+# Inventory Logging App - Inventory Manager (Android)
 
 An Android app built with Java and Room database for logging inventory items.  
 Users can create, view, update, and delete logs for components, with a status to mark items as finished or unfinished.
